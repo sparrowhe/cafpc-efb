@@ -1,0 +1,61 @@
+<html>
+
+<head>
+    <meta charset="utf-8">
+    </meta>
+    <title>绘事航空 EFB</title>
+    <link rel="stylesheet" href="//cdnjs.loli.net/ajax/libs/mdui/0.4.3/css/mdui.min.css">
+</head>
+
+<body class="mdui-drawer-body-left">
+    <div class="mdui-toolbar mdui-color-theme">
+        <a onclick="closeBar()" class="mdui-btn mdui-btn-icon"><i class="mdui-icon material-icons">menu</i></a>
+        <span class="mdui-typo-title">eAIP-China</span>
+        <div class="mdui-toolbar-spacer"></div>
+    </div>
+
+    <div class="mdui-drawer" id="drawer">
+        <ul class="mdui-list" mdui-collapse="{accordion: true}">
+            <li class="mdui-list-item mdui-ripple">
+                <i class="mdui-list-item-icon mdui-icon material-icons">home</i>
+                <div class="mdui-list-item-content" onclick="javascript:location.reload();">Home</div>
+            </li>
+
+            <li class="mdui-collapse-item mdui-collapse-item-open">
+                <div class="mdui-collapse-item-header mdui-list-item mdui-ripple">
+                    <i class="mdui-list-item-icon mdui-icon material-icons">map</i>
+                    <div class="mdui-list-item-content">Charts</div>
+                    <i class="mdui-collapse-item-arrow mdui-icon material-icons">keyboard_arrow_down</i>
+                </div>
+                <ul class="mdui-collapse-item-body mdui-list mdui-list-dense">
+                    <li class="mdui-list-item mdui-ripple" onclick="showList('ZB');closeBar()">ZBXX</li>
+                    <li class="mdui-list-item mdui-ripple" onclick="showList('ZP');closeBar()">ZPXX</li>
+                    <li class="mdui-list-item mdui-ripple" onclick="showList('ZS');closeBar()">ZSXX</li>
+                    <li class="mdui-list-item mdui-ripple" onclick="showList('ZG');closeBar()">ZGXX</li>
+                    <li class="mdui-list-item mdui-ripple" onclick="showList('ZU');closeBar()">ZUXX</li>
+                    <li class="mdui-list-item mdui-ripple" onclick="showList('ZH');closeBar()">ZHXX</li>
+                    <li class="mdui-list-item mdui-ripple" onclick="showList('ZW');closeBar()">ZWXX</li>
+                    <li class="mdui-list-item mdui-ripple" onclick="showList('ZY');closeBar()">ZYXX</li>
+                    <li class="mdui-list-item mdui-ripple" onclick="showList('ZJ');closeBar()">ZJXX</li>
+                    <li class="mdui-list-item mdui-ripple" onclick="showList('ZL');closeBar()">ZLXX</li>
+                    <li class="mdui-list-item mdui-ripple" onclick="showList('EN');closeBar()">ENR</li>
+                </ul>
+            </li>
+    </div>
+    <div class="mdui-card mdui-center" style="margin-top: 50px; width: auto; max-width: 800px;" id="card">
+        <br>
+        <div class="mdui-typo-display-3 mdui-text-center">绘事航空 EFB</div>
+        <br>
+        <div class="mdui-typo-caption-opacity mdui-text-center">制作：0225</div>
+        <br>
+        <div class="mdui-typo-caption-opacity mdui-text-center">航行资料版权归民航局空管局情报中心所有</div>
+        <br>
+        <div class="mdui-typo-caption-opacity mdui-text-center">EFB版权归绘事航空公共服务与基础资源保障部所有</div>
+        <br>
+    </div>
+</body>
+<script src="//cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="//cdnjs.loli.net/ajax/libs/mdui/0.4.3/js/mdui.min.js"></script>
+<script src="./public/index.js"></script>
+
+</html>
