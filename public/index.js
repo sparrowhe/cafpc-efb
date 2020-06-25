@@ -1,6 +1,6 @@
 var inst = new mdui.Drawer('#drawer');
-var cdn = "http://aip-cdn.sparrowhe.top/"
-var api = "http://aip.sparrowhe.top/api"
+var cdn = "http://cafpc-efb.oss-cn-beijing.aliyuncs.com/"
+var api = "http://aip.sparrowhe.top/api/"
 
 function closeBar() {
     inst.toggle();
