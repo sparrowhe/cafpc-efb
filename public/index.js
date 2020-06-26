@@ -2,6 +2,37 @@ var inst = new mdui.Drawer('#drawer');
 var cdn = "http://cafpc-efb.oss-cn-beijing.aliyuncs.com/"
 var api = "http://aip.sparrowhe.top/api/"
 
+document.onload=newAvailable();
+
+function newAvailable() {
+    html = $("#card").html();
+    $("#card").html(html + '<div class="mdui-typo-caption-opacity mdui-text-center">系统数据：eAIP ' + getAvailable() + '</div><br><div class="mdui-typo-caption-opacity mdui-text-center">当前生效数据：eAIP '+showtime()+'</div><br>');
+}
+///------Thanks for CES4097 & CES0625
+function showtime() {
+    var aip = ["2019-12-4","2020-1-2","2020-1-30","2020-2-27","2020-3-26","2020-4-23","2020-5-21","2020-6-18","2020-7-16","2020-8-13","2020-9-10","2020-10-08","2020-11-05","2020-12-03","2020-12-31"];
+    var cycle = "err";
+    var nowdate = new Date();
+    var year = nowdate.getFullYear(),
+        month = nowdate.getMonth() + 1,
+        date = nowdate.getDate(),
+        day = nowdate.getDay();
+    for(var i = 0;i<aip.length;i++){
+        //i = 3;
+        var nowaip = new Date(aip[i]);
+        var baip = new Date(aip[i-1]);
+        if(nowdate>baip&&nowdate<nowaip){
+            if(i<9){
+                cycle="200"+(i-1);
+            }else{
+                cycle="20"+(i-1);
+            }
+        }
+    }
+    return cycle;
+}
+///--------
+
 function closeBar() {
     inst.toggle();
 }
