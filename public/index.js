@@ -114,10 +114,18 @@ function viewAirportCharts(charts, start) {
 
 function viewFiles(file, icao) {
     html = '<object style="height:100%;width:100%;" data="public/pdfjs/web/viewer.html?file=' + cdn + getAvailable() + "/" + icao + "/" + file + '"></object>'
-    html += '<button class="mdui-btn mdui-btn-raised mdui-ripple" onclick=viewCharts("' + icao + '")>View</button>'
+    html += '<button class="mdui-btn mdui-btn-raised mdui-ripple" onclick=viewCharts("' + icao + '","'+icao[0]+icao[1]+'")>Back</button>'
     $("#card").html(html)
 }
 
 function showList(start) {
     genAirportsList(getAirportsListbyStart(start, getAvailable()))
+}
+
+function showRvsm(){
+    $("#card").html('<img class="mdui-img-fluid" src="https://www.aircn.org/toolbox/rvsm.jpg" />');
+}
+
+function showDesend(){
+    $("#card").html('<div align="center"><form name=form0 action=""><table border="1"width="450"id="table1"><tr><td width="96%"colspan="3"><p align="center"><u>下高计算器</u></td></tr><tr><td width="22%"></td><td width="38%"align="center">英尺</td><td width="36%"align="center">米</td></tr><tr><td width="22%">当前高度<font color="#FF0000"><b>*</b></font></td><td width="38%"><p align="center"><input type="text"name="alt_ft"size="19"></td><td width="36%"><p align="center"><input type="text"name="alt_m"size="19"></p></td></tr><tr><td width="22%">机场高度<font color="#FF0000"><b>*</b></font></td><td width="38%"><p align="center"><input type="text"name="ap_ft"size="19"></td><td width="36%"><p align="center"><input type="text"name="ap_m"size="19"></p></td></tr><tr><td>下降率</td><td><p align="center"><input type="text"name="rate_ft"size="7">/分钟<input onClick="compute_rate(1)"type=button value="计算"name=rate_bt0></td><td><p align="center"><input type="text"name="rate_m"size="7">/秒&nbsp;<input onClick="compute_rate(2)"type=button value="计算"name=rate_bt></td></tr><tr><td></td><td align="center">海里</td><td align="center">公里</td></tr><tr><td>下高地速<font color="#FF0000"><b>*</b></font></td><td><p align="center"><input type="text"name="spd_nm"size="19"></td><td><p align="center"><input type="text"name="spd_km"size="19"></td></tr><tr><td>下降距离</td><td><p align="center"><input type="text"name="dis_nm"size="13"><input onClick="compute_dis(1)"type=button value="计算"name=rate_bt1></td><td><p align="center"><input type="text"name="dis_km"size="13"><input onClick="compute_dis(2)"type=button value="计算"name=rate_bt2></td></tr><tr><td colspan="3">使用方法:<br>1.输入&quot;当前高度&quot;,&quot;机场高度&quot;,&quot;当前地速&quot;,&quot;下降率&quot;后,计算&quot;下降距离&quot;.<br>2.填写&quot;当前高度&quot;,&quot;机场高度&quot;,&quot;当前地速&quot;,&quot;下降距离&quot;后,计算&quot;下降率&quot;.<br>注意事项:<br>1.&quot;当前高度&quot;,&quot;机场高度&quot;为必填项,可选择填写公制或英制数据,如两者都有数据,以英制数据进行计算.<br>2.可以自由选择以英制或公制计算,点击相应的计算按钮.<br>3.下高地速可以在当前地速基础上稍减,如巡航450,可设为350</td></tr></table></form></div>');
 }
