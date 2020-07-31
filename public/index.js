@@ -132,5 +132,5 @@ function showDesend(){
 
 function showErc(){
     var url=cdn+getAvailable()+"/ENR6/Fixed/"
-    $("#card").html('<object style="height:100%;width:100%;" data="erc"></object>')
+    $("#card").html('<object style="height:85%;width:100%;" data="erc"></object>')
 }
