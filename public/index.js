@@ -1,6 +1,6 @@
 var inst = new mdui.Drawer('#drawer');
-var cdn = "http://cafpc-efb.oss-cn-beijing.aliyuncs.com/"
-var api = "http://aip.sparrowhe.top/api/"
+var cdn = "https://cafpc-efb.oss-cn-beijing.aliyuncs.com/"
+var api = "https://aip.sparrowhe.top/api/"
 
 document.onload=newAvailable();
 
