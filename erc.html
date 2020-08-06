@@ -2,12 +2,14 @@
 <html>
 
 <head>
-    <title>航路图</title>
+    <title>⑨</title>
+    <meta charset="utf-8">
     <meta http-equiv="imagetoolbar" content="no">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <link href="https://cdn.bootcdn.net/ajax/libs/leaflet/1.6.0/leaflet.css" rel="stylesheet">
     <script src="https://cdn.bootcdn.net/ajax/libs/leaflet/1.6.0/leaflet.js"></script>
+    <script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <style>
         .leaflet-container .leaflet-control-mouseposition {
             background-color: rgba(255, 255, 255, 0.7);
@@ -31,14 +33,42 @@
             top: 0;
             bottom: 0;
             width: 100%;
+            z-index: 1;
+        }
 
+        #slider {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            z-index: 5;
+        }
+
+        #route {
+            position: absolute;
+            top: 10px;
+            right: 250px;
+            z-index: 5;
+        }
+
+        #warn {
+            position: absolute;
+            right: 500px;
+            z-index: 5;
+            color: red;
+            font-size: large;
+            font-weight: bolder;
         }
     </style>
 </head>
 
 <body>
     <div id="map"></div>
+    <input id="slider" type="range" min="0" max="1" step="0.1" value="1" oninput="layer.setOpacity(this.value)">
+    <input id="route" type="text" value="Paste your route here"
+        oninput="clearRoute();drawRoute(routeParse(this.value));">
+    <p id="warn">本数据还未生效</p>
     <script type="text/javascript">
+        var url = "http://cafpc-efb.oss-cn-beijing.aliyuncs.com/" + "2009/ENR6/Fixed/"
         L.Control.MousePosition = L.Control.extend({
             options: {
                 position: 'bottomleft',
@@ -90,27 +120,175 @@
         L.control.mousePosition = function (options) {
             return new L.Control.MousePosition(options);
         };
-        var mapExtent = [67.45321700, 9.72893433, 138.58848723, 56.47119800];
-        var mapMinZoom = 5;
-        var mapMaxZoom = 8;
+        var routes = {},
+            fixes = {},
+            airports = {},
+            route_line = null,
+            route_markers = []
+        var mapExtent = [64.24916336, 9.91485932, 146.80009304, 55.77011269];
+        var mapMinZoom = 2;
+        var mapMaxZoom = 9;
         var bounds = new L.LatLngBounds(
             new L.LatLng(mapExtent[1], mapExtent[0]),
             new L.LatLng(mapExtent[3], mapExtent[2]));
-        var map = L.map('map', {
-            maxBounds: bounds,
-            renderer: L.canvas()
-        }).fitBounds(bounds);
-        //L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(map);
+        var map = L.map('map').fitBounds(bounds);
+
         var layer;
         var options = {
             minZoom: mapMinZoom,
             maxZoom: mapMaxZoom,
             opacity: 1.0,
-            attribution: 'Data from <a href="http://aischina.com/">中国民用航空局空中交通管理局航行情报中心</a>',
+            attribution: '',
             tms: false
         };
-        var url = "http://cafpc-efb.oss-cn-beijing.aliyuncs.com/" + "2008/ENR6/Fixed/"
-        layer = L.tileLayer(url + '{z}/{x}/{y}.png', options).addTo(map);
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', options).addTo(map);
+        layer = L.tileLayer(url+'{z}/{x}/{y}.png', options).addTo(map);
+
+        function ajaxInit(a, b, c) {
+            if (void 0 === c ? 0 : c) c = (new Date).getTime() ^ Math.random(), a += "?" + c.toString();
+            $.ajax({
+                url: a,
+                success: function (a) {
+                    b(a)
+                }
+            })
+        }
+
+        function initRoutes(a) {
+            a = a.split("\n");
+            for (var b = 0, c = a.length; b < c; b++)
+                for (var e = a[b].split(" ")[0].trim(), d = a[b].split(" ").slice(1), f = 0, g = d.length; f < g; f++)
+                    e in
+                    routes || (routes[e] = []), routes[e].push(d[f].trim())
+        }
+
+        function initAirports(a) {
+            a = a.split("\n");
+            for (var b = 0, c = a.length; b < c; b++) {
+                var e = a[b].split(" ");
+                airports[e[0]] = [e[1], e[2]]
+            }
+        }
+
+        function initFixes(a) {
+            a = a.split("\n");
+            for (var b = 0, c = a.length; b < c; b++) {
+                var e = a[b].split(" ");
+                fixes[e[0]] = [e[1], e[2]]
+            }
+        }
+
+        function routeParse(a) {
+            var b = !0;
+            a = a.split(" ");
+            var c = [];
+            for (d in a) "" != a[d].trim() && c.push(a[d].trim());
+            var e = [];
+            a = [];
+            var d = 1;
+            for (var f = c.length; d < f; d += 2)
+                if (0 <= d - 1 && d + 1 <= f - 1) e.push([c[d], c[d - 1], c[d + 1]]);
+                else {
+                    b = !1;
+                    break
+                } if (b)
+                for (d in e) {
+                    c = e[d];
+                    if (!(c[0] in routes) && "DCT" != c[0]) {
+                        console.log("route " + c[0] + " does not exist");
+                        b = !1;
+                        break
+                    }
+                    if ("DCT" == c[0]) {
+                        console.log("route DCT does not support");
+                        b = !1;
+                        break
+                    } else {
+                        f = routes[c[0]];
+                        var g = -1,
+                            h = -1;
+                        for (d in f)
+                            if (f[d].split(".")[0] == c[1] && (g = d), f[d].split(".")[0] ==
+                                c[2] && (h = d), -1 != g && -1 != h) break;
+                        if (-1 == g || -1 == h) console.log("navs does not in route " + c[0]), b = !1;
+                        if (!b) break;
+                        g = parseInt(g);
+                        h = parseInt(h);
+                        if (g > h)
+                            for (d = g; d >= h; d--) a.push(f[d]);
+                        else
+                            for (d = g; d <= h; d++) a.push(f[d])
+                    }
+                }
+            f = a.length;
+            for (d = f - 1; 1 <= d; d--) a[d] == a[d - 1] && a.splice(d, 1);
+            e = [];
+            for (d in a) {
+                if (!(a[d] in fixes)) {
+                    console.log("fixes " + a[d] + " does not exist");
+                    b = !1;
+                    break
+                }
+                e.push(fixes[a[d]])
+            }
+            return {
+                success: b,
+                routes: a,
+                latlng: e
+            }
+        }
+
+        function drawRoute(a) {
+            if (a.success) {
+                for (var b in a.latlng) addMarker(2, "", a.routes[b].split(".")[0], a.latlng[b][0], a.latlng[b][1]);
+                route_line = L.polyline(a.latlng, {
+                    color: "orange"
+                }).addTo(map)
+            }
+        }
+
+        function getReadableCoord(a, b) {
+            var c = "";
+            if ("lat" == b) {
+                c += 0 < a ? "N" : "S";
+                a = Math.abs(a);
+                var e = Math.floor(a);
+                c += e.toString() + " ";
+                return c += (60 * (a - e)).toFixed(2)
+            }
+            if ("lng" == b) return c += 0 < a ? "E" : "W", a = Math.abs(a), e = Math.floor(a), c += e.toString() + " ",
+                c += (
+                    60 * (a - e)).toFixed(2)
+        }
+
+        function getNavstationDetail(a, b, c) {
+            return '<table border="0" cellpadding="0" cellspacing="0" style="width:160px">   <tr class="tra">       <td colspan="2" align="center"><h4>\u5bfc\u822a\u70b9 ' +
+                a + '</h4></td>   </tr>   <tr>       <td width="80">\u7eac\u5ea6</td>       <td width="80"><b>' +
+                getReadableCoord(b, "lat") + "</b></td>   </tr>   <tr>       <td>\u7ecf\u5ea6</td>       <td><b>" +
+                getReadableCoord(c, "lng") + "</b></td>   </tr></table>"
+        }
+
+        function addMarker(a, b, c, e, d) {
+            a = L.icon({
+                iconUrl: "images/nav_station.png",
+                iconAnchor: [5, 5]
+            }), f = L.marker([e, d], {
+                icon: a
+            }).addTo(map), f.bindPopup(getNavstationDetail(c, e, d), {
+                maxWidth: 1024
+            }), route_markers.push(f);
+
+        }
+
+        function clearRoute() {
+            void 0 != route_line && route_line.remove();
+            for (var a in route_markers) route_markers[a].remove();
+            route_line = null;
+            route_markers = []
+        }
+        ajaxInit("navs/routes.db", initRoutes, !1);
+        ajaxInit("navs/airports.db", initAirports, !1);
+        ajaxInit("navs/fixes.db", initFixes, !1);
     </script>
 </body>
 
