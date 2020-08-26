@@ -2,7 +2,7 @@
 <html>
 
 <head>
-    <title>⑨</title>
+    <title>ERC9</title>
     <meta charset="utf-8">
     <meta http-equiv="imagetoolbar" content="no">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
@@ -66,7 +66,7 @@
     <input id="slider" type="range" min="0" max="1" step="0.1" value="1" oninput="layer.setOpacity(this.value)">
     <input id="route" type="text" value="Paste your route here"
         oninput="clearRoute();drawRoute(routeParse(this.value));">
-    <p id="warn">本数据还未生效</p>
+    <p id="warn"></p>
     <script type="text/javascript">
         var url = "http://cafpc-efb.oss-cn-beijing.aliyuncs.com/" + "2009/ENR6/Fixed/"
         L.Control.MousePosition = L.Control.extend({
@@ -286,9 +286,9 @@
             route_line = null;
             route_markers = []
         }
-        ajaxInit("navs/routes.db", initRoutes, !1);
-        ajaxInit("navs/airports.db", initAirports, !1);
-        ajaxInit("navs/fixes.db", initFixes, !1);
+        ajaxInit("http://cafpc-efb.oss-cn-beijing.aliyuncs.com/Others/routes.db", initRoutes, !1);
+        ajaxInit("http://cafpc-efb.oss-cn-beijing.aliyuncs.com/Others/airports.db", initAirports, !1);
+        ajaxInit("http://cafpc-efb.oss-cn-beijing.aliyuncs.com/Others/fixes.db", initFixes, !1);
     </script>
 </body>
 
